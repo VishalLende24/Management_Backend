@@ -12,6 +12,9 @@ class AuthController {
       const userData: CreateUserDto = req.body;
       const signUpUserData: User = await this.authService.signup(userData);
 
+      const tokenData = this.authService.createToken(signUpUserData);
+      const cookie = this.authService.createCookie(tokenData);
+
       const userResponse: UserResponse = {
         _id: signUpUserData._id,
         firstName: signUpUserData.firstName,
@@ -20,6 +23,7 @@ class AuthController {
         createdAt: signUpUserData.createdAt,
       };
 
+      res.setHeader('Set-Cookie', [cookie]);
       res.status(201).json({ data: userResponse, message: 'signup' });
     } catch (error) {
       next(error);
@@ -51,7 +55,7 @@ class AuthController {
       const userData: User = req.user;
       const logOutUserData: User = await this.authService.logout(userData);
 
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
+      res.setHeader('Set-Cookie', ['Authorization=; Path=/; Max-Age=0; SameSite=Lax; Secure=false']);
       res.status(200).json({ data: logOutUserData, message: 'logout' });
     } catch (error) {
       next(error);
