@@ -55,7 +55,7 @@ class AuthController {
       const userData: User = req.user;
       const logOutUserData: User = await this.authService.logout(userData);
 
-      res.setHeader('Set-Cookie', ['Authorization=; Path=/; Max-Age=0; SameSite=Lax; Secure=false']);
+      res.setHeader('Set-Cookie', ['Authorization=; Path=/; Max-Age=0; SameSite=None; Secure=true']);
       res.status(200).json({ data: logOutUserData, message: 'logout' });
     } catch (error) {
       next(error);
