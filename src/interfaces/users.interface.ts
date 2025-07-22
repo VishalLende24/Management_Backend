@@ -1,3 +1,5 @@
+import { CookieOptions } from 'express';
+
 export interface User {
   _id: string;
   firstName: string;
@@ -14,4 +16,5 @@ export interface UserResponse {
   lastName: string;
   email: string;
   createdAt: Date;
+  cookie: string;
 }

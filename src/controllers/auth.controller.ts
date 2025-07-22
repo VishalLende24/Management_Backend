@@ -21,6 +21,7 @@ class AuthController {
         lastName: signUpUserData.lastName,
         email: signUpUserData.email,
         createdAt: signUpUserData.createdAt,
+        cookie: tokenData.token,
       };
 
       res.setHeader('Set-Cookie', [cookie]);
@@ -33,7 +34,7 @@ class AuthController {
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData = req.body;
-      const { cookie, findUser } = await this.authService.login(userData);
+      const { cookie, findUser, token } = await this.authService.login(userData);
 
       const userResponse: UserResponse = {
         _id: findUser._id,
@@ -41,6 +42,7 @@ class AuthController {
         lastName: findUser.lastName,
         email: findUser.email,
         createdAt: findUser.createdAt,
+        cookie: token,
       };
 
       res.setHeader('Set-Cookie', [cookie]);

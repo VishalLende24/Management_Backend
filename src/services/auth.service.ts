@@ -1,5 +1,5 @@
 import { hash, compare } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
+import { Jwt, sign } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
 import { CreateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
@@ -23,7 +23,7 @@ class AuthService {
     return createUserData;
   }
 
-  public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: User }> {
+  public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: User; token: string }> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const findUser: User = await this.users.findOne({ email: userData.email });
@@ -35,7 +35,7 @@ class AuthService {
     const tokenData = this.createToken(findUser);
     const cookie = this.createCookie(tokenData);
 
-    return { cookie, findUser };
+    return { cookie, findUser, token: tokenData.token };
   }
 
   public async logout(userData: User): Promise<User> {
